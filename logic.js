@@ -1,10 +1,13 @@
-function getAge(birth_date) {
-    'use strict';
-    var DOB = new Date(birth_date.substring(6, 10), birth_date.substring(3, 5) - 1, birth_date.substring(0, 2)),
-        today = new Date(),
-        years = today.getYear() - DOB.getYear(),
-        months = today.getMonth() - DOB.getMonth(),
-        days = today.getDate() - DOB.getDate();
+function getCurrentAge(birth_date) {
+    const DOB = new Date(
+        birth_date.substring(6, 10),
+        birth_date.substring(3, 5) - 1,
+        birth_date.substring(0, 2)
+    );
+    const today = new Date();
+    let years = today.getYear() - DOB.getYear();
+    let months = today.getMonth() - DOB.getMonth();
+    let days = today.getDate() - DOB.getDate();
     if (today.getMonth() < DOB.getMonth()) {
         years -= 1;
         months += 12;
@@ -17,10 +20,24 @@ function getAge(birth_date) {
             years -= 1;
         }
     }
-    return {years: years, months: months, days: days};
+    return { years: years, months: months, days: days };
 }
 
-var soha_age = getAge('09/09/2001');
-document.getElementById("years").innerHTML = soha_age.years;
-document.getElementById("months").innerHTML = soha_age.months;
-document.getElementById("days").innerHTML = soha_age.days;
+function prepareAgeText(years, months, days) {
+    let ageText = `<span id="years">${years} years</span>`;
+    if (months > 0 && days > 0) {
+        ageText += `<span id="months">, ${months} month${months === 1? '': 's'}</span> `;
+        ageText += `<span id="days">and ${days} day${days === 1? '': 's'}</span>`;
+    } else if (months > 0) {
+        ageText += ` <span id="months">and ${months} month${months === 1? '': 's'}</span>`;
+    } else if (days > 0) {
+        ageText += ` <span id="days">and ${days} day${days === 1? '': 's'}</span>`;
+    } else {
+        ageText += `<br>It's Birthday! <span class="heart">&hearts;&hearts;&hearts;</span>`
+    }
+    return ageText;
+}
+
+const {years, months, days} = getCurrentAge('09/09/2001');
+const ageText = prepareAgeText(years, months, days);
+document.getElementById('age').innerHTML = ageText;
